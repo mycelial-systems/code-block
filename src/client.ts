@@ -114,4 +114,6 @@ export class CodeBlock extends HTMLElement {
 
 export default CodeBlock
 
-defineElement('copy-button', CodeBlock)
+export function define () {
+    return defineElement(CodeBlock.TAG, CodeBlock)
+}

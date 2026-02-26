@@ -34,11 +34,17 @@ export class CodeBlock extends CodeBlockClient {
         return hint
     }
 
+    getLanguageClass () {
+        return Array.from(this.classList)
+            .find(name => name.startsWith('language-')) ?? ''
+    }
+
     render () {
         this.innerHTML = CodeBlockHtml({
             code: this.getSourceCode(),
             copyHint: this.getCopyHint(),
-            copyButtonLabel: this.getCopyButtonLabel()
+            copyButtonLabel: this.getCopyButtonLabel(),
+            languageClass: this.getLanguageClass()
         })
     }
 }
