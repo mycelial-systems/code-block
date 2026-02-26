@@ -1,10 +1,111 @@
 /**
  * Don't show until JavaScript is instantiated
  */
-{{component-name}}:not(:defined) {
+code-block:not(:defined) {
 	display: none;
 }
 
-{{component-name}} {
-    background-color: red;
+code-block {
+    --code-block-background: #f6f8fa;
+    --code-block-border: #d0d7de;
+    --code-block-foreground: #24292f;
+    --code-block-focus: #0969da;
+    --code-block-copy: #57606a;
+    --code-block-copy-success: #1f883d;
+    display: block;
+}
+
+code-block .code-block__inner {
+    position: relative;
+}
+
+code-block .code-block__pre {
+    margin: 0;
+    border: 1px solid var(--code-block-border);
+    border-radius: 0.4rem;
+    background: var(--code-block-background);
+    color: var(--code-block-foreground);
+    padding: 1rem 3rem 1rem 1rem;
+    overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, monospace;
+    font-size: 0.85rem;
+    line-height: 1.45;
+}
+
+code-block .code-block__pre code {
+    display: block;
+    white-space: pre;
+}
+
+code-block .code-block__controls {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+}
+
+code-block copy-button {
+    width: 1.5rem;
+    height: 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--code-block-copy);
+}
+
+code-block copy-button .copy-wrapper {
+    fill: var(--code-block-copy);
+}
+
+code-block copy-button .success-wrapper {
+    fill: var(--code-block-copy-success);
+}
+
+code-block copy-button button {
+    width: 1.5rem;
+    height: 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid transparent;
+    border-radius: 0.35rem;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    padding: 0;
+}
+
+code-block copy-button button:hover {
+    background: rgba(175, 184, 193, 0.2);
+}
+
+code-block copy-button button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+code-block copy-button button:focus-visible {
+    outline: 2px solid var(--code-block-focus);
+    outline-offset: 2px;
+}
+
+code-block .copy-hint {
+    position: absolute;
+    right: 0;
+    top: -0.15rem;
+    transform: translateY(-100%);
+    margin: 0;
+    font-size: 0.75rem;
+}
+
+code-block .visually-hidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+    white-space: nowrap;
 }

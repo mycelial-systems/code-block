@@ -1,98 +1,52 @@
-import { createDebug } from '@substrate-system/debug'
-const debug = createDebug()
+import { define as defineElement } from '@substrate-system/web-component/util'
+import { CodeBlock as CodeBlockClient } from './client.js'
+import { CodeBlock as CodeBlockHtml } from './html.js'
 
-// for docuement.querySelector
 declare global {
     interface HTMLElementTagNameMap {
-        '{{component-name}}': Example
+        'code-block': CodeBlock
     }
 }
 
-export class Example extends HTMLElement {
-    // Define the attributes to observe
-    // need this for `attributeChangedCallback`
-    static observedAttributes = ['example']
-
-    example:string|null
-
-    constructor () {
-        super()
-        const example = this.getAttribute('example')
-        this.example = example
-
-        this.innerHTML = `<div>
-            <p>example</p>
-            <ul>
-                ${Array.from(this.children).filter(Boolean).map(node => {
-                    return `<li>${node.outerHTML}</li>`
-                }).join('')}
-            </ul>
-        </div>`
-    }
-
-    /**
-     * Handle 'example' attribute changes
-     * @see {@link https://gomakethings.com/how-to-detect-when-attributes-change-on-a-web-component/#organizing-your-code Go Make Things article}
-     *
-     * @param  {string} oldValue The old attribute value
-     * @param  {string} newValue The new attribute value
-     */
-    handleChange_example (oldValue:string, newValue:string) {
-        debug('handling example change', oldValue, newValue)
-
-        if (newValue === null) {
-            // [example] was removed
-        } else {
-            // set [example] attribute
-        }
-    }
-
-    /**
-     * Runs when the value of an attribute is changed
-     *
-     * @param  {string} name     The attribute name
-     * @param  {string} oldValue The old attribute value
-     * @param  {string} newValue The new attribute value
-     */
-    attributeChangedCallback (name:string, oldValue:string, newValue:string) {
-        debug('an attribute changed', name)
-        const handler = this[`handleChange_${name}`];
-        (handler && handler(oldValue, newValue))
-        this.render()
-    }
-
-    disconnectedCallback () {
-        debug('disconnected')
-    }
-
+/**
+ * Browser APIs + rendering logic
+ */
+export class CodeBlock extends CodeBlockClient {
     connectedCallback () {
-        debug('connected')
+        if (!this.querySelector('[data-code-block-root]')) {
+            this.render()
+        }
 
-        const observer = new MutationObserver(function (mutations) {
-            mutations.forEach((mutation) => {
-                if (mutation.addedNodes.length) {
-                    debug('Node added: ', mutation.addedNodes)
-                }
-            })
-        })
+        super.connectedCallback()
+    }
 
-        observer.observe(this, { childList: true })
+    getSourceCode () {
+        const code = this.querySelector('[data-code-block-code]')
+        if (code) return code.textContent ?? ''
+        return this.textContent ?? ''
+    }
 
-        this.render()
+    getCopyHint () {
+        if (!this.hasAttribute('hint')) return true
+        const hint = this.getAttribute('hint')
+        if (hint === null || hint === '' || hint === 'true') return true
+        if (hint === 'false') return false
+        return hint
     }
 
     render () {
-        this.innerHTML = `<div>
-            <p>example</p>
-            <ul>
-                ${Array.from(this.children).filter(Boolean).map(node => {
-                    return `<li>${node.outerHTML}</li>`
-                }).join('')}
-            </ul>
-        </div>`
+        this.innerHTML = CodeBlockHtml({
+            code: this.getSourceCode(),
+            copyHint: this.getCopyHint(),
+            copyButtonLabel: this.getCopyButtonLabel()
+        })
     }
 }
 
-if ('customElements' in window) {
-    customElements.define('{{component-name}}', Example)
+export default CodeBlock
+
+export function define () {
+    return defineElement(CodeBlock.TAG, CodeBlock)
 }
+
+define()
