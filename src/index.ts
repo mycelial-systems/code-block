@@ -4,7 +4,7 @@ import { CodeBlock as CodeBlockHtml } from './html.js'
 
 declare global {
     interface HTMLElementTagNameMap {
-        'code-block': CodeBlock
+        'code-block':CodeBlock
     }
 }
 

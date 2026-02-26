@@ -16,9 +16,4 @@ code-block {
         background-color: transparent;
         border: none;
     }
-
-    /* prism override */
-    & pre[class*="language-"] {
-        border: none;
-    }
 }

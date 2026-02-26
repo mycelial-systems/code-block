@@ -44,6 +44,20 @@ icon button.
 npm i -S @substrate-system/code-block
 ```
 
+## Example
+
+```js
+import '@substrate-system/code-block'
+import '@substrate-system/code-block/css'
+
+```
+
+```html
+<code-block>
+  const answer = 42
+</code-block>
+```
+
 ## API
 
 This package exposes ESM and CommonJS via
