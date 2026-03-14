@@ -1,6 +1,6 @@
 {
   "name": "@substrate-system/code-block",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Code block web component",
   "type": "module",
   "exports": {
