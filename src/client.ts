@@ -1,5 +1,8 @@
 import { define as defineElement } from '@substrate-system/web-component/util'
-import { define as defineCopyButton } from '@substrate-system/copy-button/client'
+import {
+    define as defineCopyButton
+} from '@substrate-system/copy-button/client'
+import { DEFAULT_COPY_BUTTON_LABEL } from './constants.js'
 
 defineCopyButton()
 
@@ -45,7 +48,9 @@ export class CodeBlock extends HTMLElement {
 
     hydrate ():void {
         this.codeEl = this.querySelector('[data-code-block-code]')
-        this.copyButtonEl = this.querySelector('copy-button[data-code-block-copy]')
+        this.copyButtonEl = this.querySelector(
+            'copy-button[data-code-block-copy]'
+        )
         this.observeCode()
         this.observeCopyButton()
         this.syncPayload()
@@ -97,7 +102,7 @@ export class CodeBlock extends HTMLElement {
 
     getCopyButtonLabel ():string {
         const label = this.getAttribute('copy-button-label')
-        return label?.trim() || 'Copy code to clipboard'
+        return label?.trim() || DEFAULT_COPY_BUTTON_LABEL
     }
 
     applyIconButtonA11y ():void {

@@ -1,20 +1,121 @@
+:root {
+    --code-block-copy-space: 4rem;
+    --code-block-copy-button-color: currentcolor;
+    --code-block-copy-button-success-color: currentcolor;
+    --code-block-copy-button-hint-background: CanvasText;
+    --code-block-copy-button-hint-color: Canvas;
+    --code-block-copy-button-focus-color: currentcolor;
+}
+
+.visually-hidden:where(:not(:focus-within, :active)) {
+    position: absolute !important;
+    clip-path: inset(50%) !important;
+    overflow: hidden !important;
+    width: 1px !important;
+    height: 1px !important;
+    margin: -1px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    white-space: nowrap !important;
+}
+
 code-block {
     display: block;
+    max-inline-size: 100%;
+    box-sizing: border-box;
+}
 
-    /**
-     * Don't show until JavaScript is ready
-     */
-    &:not(:defined) {
-        visibility: hidden;
-    }
+code-block .code-block-inner {
+    position: relative;
+    max-inline-size: 100%;
+    min-inline-size: 0;
+}
 
-    & .code-block-inner {
-        position: relative;
-    }
+code-block .code-block-inner pre {
+    max-inline-size: 100%;
+    box-sizing: border-box;
+    overflow-x: auto;
+    padding-block-start: var(--code-block-copy-space);
+    padding-inline-end: var(--code-block-copy-space);
+}
 
-    & .code-block-controls {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
+code-block .code-block-controls {
+    position: absolute;
+    inset-block-start: 1rem;
+    inset-inline-end: 1rem;
+}
+
+code-block copy-button {
+    display: inline-block;
+    position: relative;
+    inline-size: 44px;
+    block-size: 44px;
+    min-inline-size: 44px;
+    min-block-size: 44px;
+    color: var(--code-block-copy-button-color);
+}
+
+code-block copy-button .copy-wrapper,
+code-block copy-button .success-wrapper {
+    display: inline-block;
+    inline-size: 100%;
+    block-size: 100%;
+}
+
+code-block copy-button .copy-wrapper {
+    fill: var(--code-block-copy-button-color);
+}
+
+code-block copy-button .success-svg {
+    fill: var(--code-block-copy-button-success-color);
+}
+
+code-block .code-block-controls button {
+    min-inline-size: 44px;
+    min-block-size: 44px;
+    display: block;
+    position: relative;
+    inline-size: 100%;
+    block-size: 100%;
+    padding: 0;
+    border: 0;
+    background-color: transparent;
+    color: inherit;
+    cursor: pointer;
+}
+
+code-block .code-block-controls button:focus-visible {
+    outline: 2px solid var(--code-block-copy-button-focus-color);
+    outline-offset: 2px;
+}
+
+code-block copy-button .copy-hint {
+    position: absolute;
+    inset: unset;
+    inset-block-end: 100%;
+    inset-inline-start: 50%;
+    display: none;
+    margin: 0 0 4px;
+    padding: 0.25rem 0.5rem;
+    border: 0;
+    background: var(--code-block-copy-button-hint-background);
+    color: var(--code-block-copy-button-hint-color);
+    font-size: 0.75rem;
+    opacity: 0;
+    transform: translateX(-50%);
+    transition: opacity 0.15s ease-in-out,
+        display 0.15s allow-discrete;
+    white-space: nowrap;
+}
+
+code-block copy-button .copy-hint:popover-open,
+code-block copy-button [class~="copy-hint--visible"] {
+    display: block;
+    opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    code-block copy-button .copy-hint {
+        transition: none;
     }
 }
