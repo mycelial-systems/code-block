@@ -1,0 +1,149 @@
+{
+  "project": "@substrate-system/code-block",
+  "branchName": "ralph/code-block-audit-remediation",
+  "description": "Resolve correctness, security, accessibility, packaging, and responsive-design findings from the repository audit.",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Secure the SSR HTML renderer",
+      "description": "As a package consumer, I want server-rendered code blocks to safely handle user-provided options so that content cannot inject markup or attributes.",
+      "acceptanceCriteria": [
+        "Escape copyHint text before inserting it into generated HTML",
+        "Escape classes and attribute values before inserting them into generated HTML",
+        "Add regression tests covering quote, angle-bracket, and event-handler payloads",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-002",
+      "title": "Fix minified CommonJS package exports",
+      "description": "As a CommonJS consumer, I want every advertised package export to exist so that requiring minified entry points does not fail at runtime.",
+      "acceptanceCriteria": [
+        "Either build the advertised dist/*.min.cjs files or remove the invalid require mapping",
+        "Add a package export smoke check for the minified entry points",
+        "The package build completes without missing advertised files",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-003",
+      "title": "Align SSR and hydrated copy-button accessibility",
+      "description": "As a screen-reader user, I want the copy button to expose the same accessible name before and after hydration so that SSR does not produce contradictory announcements.",
+      "acceptanceCriteria": [
+        "Use one shared default copy-button label for SSR and client hydration",
+        "Apply copyButtonLabel to the server-rendered button aria-label",
+        "Keep the live region empty until a copy status needs to be announced",
+        "Add tests for default and custom labels in SSR output and hydrated output",
+        "Tests pass",
+        "Verify in browser using dev-browser skill",
+        "Typecheck passes"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-004",
+      "title": "Preserve progressive enhancement without JavaScript",
+      "description": "As a user with JavaScript disabled or delayed, I want code content to remain readable so that the component has a useful fallback.",
+      "acceptanceCriteria": [
+        "Remove the rule that hides the entire code-block before custom-element definition",
+        "Plain-text and SSR-rendered code remain visible before JavaScript loads",
+        "Add a regression test or browser check for the pre-upgrade state",
+        "Tests pass",
+        "Verify in browser using dev-browser skill",
+        "Typecheck passes"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-005",
+      "title": "Make code blocks responsive and touch-friendly",
+      "description": "As a mobile user, I want long code and the copy control to remain usable within narrow viewports so that the page does not overflow or hide content.",
+      "acceptanceCriteria": [
+        "Constrain code-block width to its containing area",
+        "Make overflowing pre content keyboard- and touch-scrollable",
+        "Reserve space so the copy control does not cover code",
+        "Give the copy control a minimum 24px target, preferably 44px",
+        "Verify narrow viewport behavior and keyboard focus in a browser",
+        "Verify in browser using dev-browser skill",
+        "Typecheck passes"
+      ],
+      "priority": 5,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-006",
+      "title": "Integrate and document accessibility styling",
+      "description": "As a package consumer, I want the documented CSS imports to produce a correctly styled accessible copy button without hidden implementation requirements.",
+      "acceptanceCriteria": [
+        "Include the visually-hidden utility and copy-button styles in the supported import path, or document all required imports",
+        "The default usage does not display the visually-hidden Copy text as visible content",
+        "Update README examples to match the supported import path",
+        "Verify in browser using dev-browser skill",
+        "Typecheck passes"
+      ],
+      "priority": 6,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-007",
+      "title": "Make the demo page accessible and high-contrast",
+      "description": "As a demo visitor using assistive technology or low vision, I want the example page and syntax theme to meet basic navigation and contrast expectations.",
+      "acceptanceCriteria": [
+        "Add a single descriptive h1 and a main landmark to the example page",
+        "Replace or adjust Prism token colors that fail 4.5:1 contrast against the code background",
+        "Define project-owned colors as CSS variables where the demo owns the styling",
+        "Verify the example at desktop and narrow viewports in a browser",
+        "Verify in browser using dev-browser skill",
+        "Typecheck passes"
+      ],
+      "priority": 7,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-008",
+      "title": "Add audit checks to continuous integration",
+      "description": "As a maintainer, I want CI to catch the audited quality regressions so that packaging, CSS, and accessibility issues do not recur silently.",
+      "acceptanceCriteria": [
+        "Run core stylelint checks in CI",
+        "Add a repeatable accessibility check for the demo or document the runtime limitation",
+        "Add a package-export smoke check to CI",
+        "CI uses reproducible dependency installation or documents why a lockfile is not used",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 8,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-009",
+      "title": "Apply the repository line-length convention",
+      "description": "As a maintainer, I want source lines kept below 80 columns so that the code remains readable in narrow terminals and reviews.",
+      "acceptanceCriteria": [
+        "Wrap source, test, and example lines that exceed 79 columns",
+        "Do not reformat vendored Prism output solely for this task",
+        "Add or configure a check that prevents new overlong project-owned lines",
+        "Tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 9,
+      "passes": true,
+      "notes": ""
+    }
+  ]
+}

@@ -1,0 +1,213 @@
+## Codebase Patterns
+- SSR markup is built as template strings in `src/html.ts`; escape all
+  user-controlled text at the final HTML boundary.
+- Browser tests are bundled with esbuild and run in Chromium through tapout.
+- Keep shared SSR and client defaults in `src/constants.ts` so hydration
+  cannot drift from server output.
+- Keep progressive-enhancement fallbacks in normal document flow; custom
+  element definition must not be required for content visibility.
+- Keep demo-owned colors in `example/style.css`; override vendored Prism
+  tokens there instead of reformatting `example/prism.css`.
+- Import raw demo HTML and CSS through the `test:bundle` loaders when browser
+  tests need to exercise shipped example assets.
+- Run CI installs with `npm ci` so platform-specific package postinstall steps
+  can materialize native binaries.
+- Use `@substrate-system/tapout/axe` for bundled Axe checks; its package export
+  maps the extensionless subpath correctly.
+- Keep project-owned stylelint globs separate from vendored Prism output.
+- Keep the 79-column checker scoped to `src`, `test`, and `example`, with
+  explicit exclusions for vendored assets.
+- Include repository quality checks in `npm run lint` so local linting catches
+  convention regressions before commits.
+
+## 2026-07-15 - US-001
+- What was implemented
+  - Added safe SSR attribute serialization for host and copy-button values.
+  - Escaped wrapper classes and copy-button hint text.
+  - Added regression coverage for quote, angle-bracket, and event-handler
+    payloads.
+- Files changed
+  - `src/html.ts`
+  - `test/index.ts`
+  - `specs/prd.json`
+  - `progress.log`
+- **Learnings for future iterations:**
+  - The shared `toAttributes` helper does not escape values, so SSR code
+    must not use it for user-controlled markup.
+  - Required `NOTES/architecture.md` and `NOTES/product.md` were absent in
+    this checkout.
+---
+## 2026-07-15 - US-002
+- What was implemented
+  - Added a minified CommonJS esbuild target for every TypeScript entry point.
+  - Added the minified CJS build to the package build pipeline.
+  - Added a package export smoke check that loads all generated minified CJS
+    files with minimal browser globals.
+- Files changed
+  - `package.json`
+  - `test/package-exports.cjs`
+  - `specs/prd.json`
+  - `progress.log`
+- **Learnings for future iterations:**
+  - The wildcard `./min/*` export maps `.min.js` imports to matching
+    `.min.cjs` requires, so both build variants must be generated together.
+  - Browser entry points need `document`, `window`, and `HTMLElement` stubs
+    to be required from a Node export smoke test.
+---
+## 2026-07-15 - US-003
+- What was implemented
+  - Shared the default copy-button label between SSR and client hydration.
+  - Applied custom labels to the server-rendered button aria-label.
+  - Left the code-block live region empty until a status is available.
+  - Added SSR and Chromium hydration regression coverage for default and
+    custom labels.
+- Files changed
+  - `src/constants.ts`
+  - `src/client.ts`
+  - `src/html.ts`
+  - `test/index.ts`
+  - `specs/prd.json`
+  - `progress.log`
+- **Learnings for future iterations:**
+  - The copy-button dependency owns its polite success status; the
+    code-block live region should not announce the button label on load.
+  - The browser-control surface was unavailable, but `tapout` verified the
+    hydration behavior in Chromium.
+---
+## 2026-07-15 - US-004
+- What was implemented
+  - Removed the pre-definition `visibility: hidden` rule from the component
+    stylesheet.
+  - Added a Chromium regression test for plain-text and SSR code visibility
+    before custom-element upgrade.
+  - Configured the browser test bundle to load the component CSS as text so
+    the regression test exercises the shipped stylesheet.
+- Files changed
+  - `src/index.css`
+  - `test/index.ts`
+  - `test/css.d.ts`
+  - `package.json`
+  - `specs/prd.json`
+  - `progress.log`
+- **Learnings for future iterations:**
+  - Pre-upgrade visibility regressions can be tested in Chromium by injecting
+    the bundled CSS into an isolated, undefined custom-element host.
+  - Keep SSR markup readable without relying on the client registration
+    timing.
+---
+## 2026-07-15 - US-005
+- What was implemented
+  - Constrained the code-block host and inner wrapper to their containing
+    width.
+  - Made preformatted code horizontally scrollable with block and inline
+    space reserved for the overlaid copy control.
+  - Added a 44px minimum inline and block size plus a visible keyboard focus
+    outline to the copy button.
+  - Made the preformatted code region keyboard focusable with `tabindex="0"`.
+  - Added Chromium regression coverage for narrow layout, overflow,
+    reserved control space, touch-compatible overflow, and keyboard focus.
+- Files changed
+  - `src/index.css`
+  - `src/html.ts`
+  - `test/index.ts`
+  - `specs/prd.json`
+  - `progress.log`
+- **Learnings for future iterations:**
+  - The component stylesheet is loaded as raw CSS in browser tests, so
+    selectors need to work in the test Chromium without build-time nesting
+    transforms.
+  - A scrollable pre needs `tabindex="0"` for keyboard users; overflow CSS
+    alone does not make the region focusable.
+  - The dedicated browser-control surface was unavailable, but tapout runs
+    the same assertions in Chromium.
+---
+## 2026-07-15 11:12 PDT - US-006
+- What was implemented
+  - Added the visually-hidden utility to the supported component stylesheet.
+  - Added copy-button host, icon, hint, focus, and reduced-motion styles.
+  - Documented that the component CSS import includes all required styles.
+  - Added Chromium regression coverage for hidden copy text and button styles.
+- Files changed
+  - `src/index.css`
+  - `test/index.ts`
+  - `README.md`
+  - `specs/prd.json`
+  - `progress.log`
+- **Learnings for future iterations:**
+  - The copy-button HTML includes its own `.visually-hidden` label, so the
+    package CSS must provide that utility for the documented import to work.
+  - Keep copy-button color tokens in the package root variables so consumers
+    can theme the icon and hint without another stylesheet.
+---
+## 2026-07-15 11:19 PDT - US-007
+- What was implemented
+  - Added one descriptive `h1` and a `main` landmark to the demo page.
+  - Moved the demo code block into the main landmark.
+  - Added demo CSS variables for page, link, code, focus, and token colors.
+  - Overrode low-contrast Prism tokens with accessible colors while leaving
+    the vendored Prism stylesheet unchanged.
+  - Added a Chromium regression test for structure, contrast, and narrow
+    layout containment.
+- Files changed
+  - `example/index.html`
+  - `example/index.ts`
+  - `example/style.css`
+  - `package.json`
+  - `test/index.ts`
+  - `test/html.d.ts`
+  - `specs/prd.json`
+  - `progress.log`
+- **Learnings for future iterations:**
+  - The example's project-owned CSS should layer after Prism so custom
+    properties can replace generated token colors without editing vendored
+    output.
+  - The in-app browser surface had no available backends; tapout's Chromium
+    run and the Vite production build were used for browser verification.
+---
+## 2026-07-15 11:36 PDT - US-008
+- What was implemented
+  - Added project-owned stylelint, TypeScript, package-export, and browser
+    accessibility scripts.
+  - Added a WCAG AA Axe check for the shipped demo and SSR code block markup.
+  - Wired reproducible `npm ci` installs and all quality checks into Node CI;
+    the Pages workflow now uses the same install mode.
+  - Added `package-lock.json` for reproducible dependency resolution.
+- Files changed
+  - `.github/workflows/nodejs.yml`
+  - `.github/workflows/gh-pages.yml`
+  - `package.json`
+  - `package-lock.json`
+  - `test/a11y.ts`
+  - `test/a11y.sh`
+  - `specs/prd.json`
+  - `progress.log`
+- **Learnings for future iterations:**
+  - The tapout Axe helper is available through the extensionless `axe`
+    subpath; the documented `.js` suffix does not resolve through its export
+    map when bundled.
+  - `npm ci --ignore-scripts` cannot validate this package build because
+    lightningcss needs its lifecycle step to select the platform binary.
+  - Build and package-export checks must run sequentially because the build
+    recreates `dist` before the export smoke test reads it.
+---
+## 2026-07-15 11:37 PDT - US-009
+- What was implemented
+  - Wrapped project-owned source and test lines to stay below 80 columns.
+  - Added a repeatable 79-column checker for `src`, `test`, and `example`.
+  - Excluded vendored Prism assets from the checker.
+  - Included the checker in `npm run lint`.
+- Files changed
+  - `src/client.ts`
+  - `src/html.ts`
+  - `test/index.ts`
+  - `test/line-length.cjs`
+  - `test/line-length-check.cjs`
+  - `package.json`
+  - `specs/prd.json`
+  - `progress.log`
+- **Learnings for future iterations:**
+  - A small CommonJS checker can cover mixed TypeScript, JavaScript, HTML,
+    and CSS roots without adding a formatter dependency.
+  - Keep vendored output exclusions explicit so project-owned files remain
+    enforceable without reformatting third-party code.
+---

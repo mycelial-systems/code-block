@@ -182,6 +182,9 @@ require('@substrate-system/code-block')
 import '@substrate-system/code-block/css'
 ```
 
+This supported CSS entry includes the code block layout, copy-button, and
+visually-hidden accessibility styles. No additional stylesheet is required.
+
 Or minified:
 
 ```js

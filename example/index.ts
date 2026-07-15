@@ -16,4 +16,4 @@ export default defineConfig({
     }
 })`
 
-document.body.append(block)
+document.querySelector('main')?.append(block)
