@@ -1,5 +1,5 @@
 :root {
-    --code-block-copy-space: 4rem;
+    --code-block-copy-space: 1rem;
     --code-block-copy-button-color: currentcolor;
     --code-block-copy-button-success-color: currentcolor;
     --code-block-copy-button-hint-background: CanvasText;
