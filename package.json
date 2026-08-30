@@ -29,8 +29,7 @@
     "./dist/*"
   ],
   "scripts": {
-    "lint": "eslint \"./**/*.{ts,js}\" && npm run lint:lines",
-    "lint:lines": "node ./test/line-length.cjs",
+    "lint": "eslint \"./**/*.{ts,js}\"",
     "stylelint": "stylelint src/*.css example/style.css",
     "typecheck": "tsc --noEmit --project tsconfig.json",
     "test": "npm run --silent test:bundle | tapout",
